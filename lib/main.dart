@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:newsio/constants.dart';
-import 'package:newsio/screens/home/home.dart';
-import 'package:newsio/screens/loading/Loading.dart';
-import 'package:newsio/screens/login/login.dart';
-import 'package:newsio/services/Authenticate.dart';
+import 'package:newsio/models/User.dart';
+import 'package:newsio/services/Wrapper.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,6 +17,7 @@ class MyApp extends StatelessWidget {
           primaryColor: kPrimaryColor,
           scaffoldBackgroundColor: Colors.white,
         ),
-        home: Authenticate());
+        home: ChangeNotifierProvider<User>(
+            create: (_) => User(), child: Wrapper()));
   }
 }
