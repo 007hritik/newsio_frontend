@@ -4,7 +4,7 @@ class Ecm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("Ecm"),
+      body: Center(child: Text("Ecm")),
     );
   }
 }

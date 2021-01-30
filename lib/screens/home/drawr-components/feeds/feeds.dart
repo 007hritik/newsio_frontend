@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'components/body.dart';
 
 class Feeds extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("Feeds")),
+      body: Body(),
     );
   }
 }

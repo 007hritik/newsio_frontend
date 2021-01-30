@@ -1,16 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
-import 'package:newsio/models/User.dart';
-import 'package:provider/provider.dart';
 
 class AuthService {
   final Dio dio = new Dio();
-  login(name, password) async {
+
+  Future<Response> login(String name, String password) async {
+    Response loginResponse;
     try {
-      return await dio.post("https://awt-auth.herokuapp.com/authenticate",
+      loginResponse = await dio.post(
+          "https://awt-auth.herokuapp.com/authenticate",
           data: {"name": name, "password": password},
           options: Options(contentType: Headers.formUrlEncodedContentType));
+      return loginResponse;
     } on DioError catch (e) {
       Fluttertoast.showToast(
           msg: e.response.data['msg'],
@@ -18,14 +20,17 @@ class AuthService {
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.redAccent,
           fontSize: 16.0);
+      return null;
     }
   }
 
-  signup(String userName, String password) async {
+  Future<Response> signup(String name, String password) async {
+    Response signupResponse;
     try {
-      return await dio.post("https://awt-auth.herokuapp.com/adduser",
-          data: {"name": userName, "password": password},
+      signupResponse = await dio.post("https://awt-auth.herokuapp.com/adduser",
+          data: {"name": name, "password": password},
           options: Options(contentType: Headers.formUrlEncodedContentType));
+      return signupResponse;
     } on DioError catch (e) {
       Fluttertoast.showToast(
           msg: e.response.data['msg'],
@@ -33,9 +38,7 @@ class AuthService {
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.redAccent,
           fontSize: 16.0);
+      return null;
     }
   }
-  // Stream<User> get user {
-  //   return
-  //   }
 }

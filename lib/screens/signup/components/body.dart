@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,10 +6,8 @@ import 'package:newsio/components/rounded_passwordfiled.dart';
 import 'package:newsio/components/rounded_buttons.dart';
 import 'package:newsio/components/rounded_textfield.dart';
 import 'package:newsio/screens/loading/Loading.dart';
-import 'package:newsio/screens/login/login.dart';
 import 'package:newsio/screens/signup/components/orDivider.dart';
 import 'package:newsio/screens/signup/components/social_icon_button.dart';
-import 'package:newsio/screens/welcome/welcome.dart';
 import 'package:newsio/services/auth_service.dart';
 
 import '../../../constants.dart';
@@ -20,13 +19,23 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  String nameOrEmail, password;
   final _formkey = GlobalKey<FormState>();
 
-  bool isLoading = false;
+  bool isLoading;
+  @override
+  void initState() {
+    isLoading = false;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String nameOrEmail, password;
     Size size = MediaQuery.of(context).size;
     return isLoading
         ? Loading()
@@ -56,27 +65,38 @@ class _BodyState extends State<Body> {
                           }),
                           RoundedButton(
                               color: kPrimaryColor,
-                              text: "SignUp",
-                              press: () {
+                              text: "Login",
+                              press: () async {
                                 if (_formkey.currentState.validate()) {
-                                  setState(() => isLoading = true);
-                                  AuthService()
-                                      .signup(nameOrEmail, password)
-                                      .then((val) {
-                                    if (val.data['success']) {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    }
+                                  setState(() => isLoading = !isLoading);
+                                  Response authLoginResponse =
+                                      await AuthService()
+                                          .signup(nameOrEmail, password);
+                                  if (authLoginResponse.data['success'] ==
+                                      true) {
+                                    setState(() => isLoading = !isLoading);
                                     Fluttertoast.showToast(
-                                        msg: val.data['msg'],
+                                        msg: authLoginResponse.data['msg'],
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.BOTTOM,
-                                        backgroundColor: Colors.redAccent,
+                                        backgroundColor: Colors.red,
                                         fontSize: 16.0);
-                                  });
+                                  }
+                                  if (authLoginResponse.data["success"] ==
+                                      false) {
+                                    setState(() {
+                                      isLoading = !isLoading;
+                                      Fluttertoast.showToast(
+                                          msg: authLoginResponse.data['msg'],
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.red,
+                                          fontSize: 16.0);
+                                    });
+                                  } else {}
                                 }
-                                print('Login Button Pressed');
+
+                                print('Signup Button Pressed');
                               }),
                           SizedBox(height: size.height * 0.05),
                           GestureDetector(

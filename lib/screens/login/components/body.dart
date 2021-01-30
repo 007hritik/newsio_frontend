@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:newsio/components/rounded_buttons.dart';
 import 'package:newsio/components/rounded_passwordfiled.dart';
 import 'package:newsio/components/rounded_textfield.dart';
@@ -9,7 +11,6 @@ import 'package:newsio/models/User.dart';
 import 'package:newsio/screens/loading/Loading.dart';
 import 'package:newsio/screens/login/components/background.dart';
 import 'package:newsio/screens/signup/signup.dart';
-import 'package:newsio/screens/welcome/welcome.dart';
 import 'package:newsio/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,12 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  bool isLoading = false;
+  bool isLoading;
+  @override
+  void initState() {
+    isLoading = false;
+    super.initState();
+  }
 
   final _formkey = GlobalKey<FormState>();
 
@@ -66,15 +72,29 @@ class _BodyState extends State<Body> {
                               text: "Login",
                               press: () async {
                                 if (_formkey.currentState.validate()) {
-                                  setState(() => isLoading = true);
-                                  AuthService()
-                                      .login(nameOrEmail, password)
-                                      .then((val) {
-                                    if (val.data['success']) {
-                                      user.setAuthToken(val.data['token']);
-                                    }
-                                  });
+                                  setState(() => isLoading = !isLoading);
+                                  Response authLoginResponse =
+                                      await AuthService()
+                                          .login(nameOrEmail, password);
+                                  if (authLoginResponse.data['success'] ==
+                                      true) {
+                                    user.setAuthToken(
+                                        authLoginResponse.data['token']);
+                                  }
+                                  if (authLoginResponse.data["success"] ==
+                                      false) {
+                                    setState(() {
+                                      isLoading = !isLoading;
+                                      Fluttertoast.showToast(
+                                          msg: authLoginResponse.data['msg'],
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.green,
+                                          fontSize: 16.0);
+                                    });
+                                  } else {}
                                 }
+
                                 print('Login Button Pressed');
                               }),
                           SizedBox(height: size.height * 0.05),
