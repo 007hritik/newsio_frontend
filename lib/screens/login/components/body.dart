@@ -94,8 +94,6 @@ class _BodyState extends State<Body> {
                                     });
                                   } else {}
                                 }
-
-                                print('Login Button Pressed');
                               }),
                           SizedBox(height: size.height * 0.05),
                           GestureDetector(

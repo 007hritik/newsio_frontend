@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'background.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
   List<String> imgPath = [
     'assets/feeds_profile _images/michael-dam-mEZ3PoFGs_k-unsplash.jpg',
     'assets/feeds_profile _images/michael-henry-5OyGRn_r9Y4-unsplash.jpg',
@@ -11,6 +16,7 @@ class Body extends StatelessWidget {
     'assets/feeds_profile _images/shuttergames-9BE8hiqvUM4-unsplash.jpg',
     'assets/feeds_profile _images/steve-halama-dfwFFQLvc0s-unsplash.jpg'
   ];
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -23,12 +29,8 @@ class Body extends StatelessWidget {
                 borderRadius:
                     BorderRadius.only(bottomLeft: Radius.circular(100))),
             height: size.height * 0.2,
-            child: Column(children: [
-              SizedBox(
-                height: size.height * 0.2 * 0.5,
-              ),
-              timelineStories()
-            ]))
+            width: double.infinity,
+            child: Text("Hello"))
       ],
     ));
   }
